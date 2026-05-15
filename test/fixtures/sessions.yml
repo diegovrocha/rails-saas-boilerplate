@@ -1,0 +1,1 @@
+# Empty by default — sessions are created in tests via start_new_session_for.

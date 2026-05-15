@@ -1,0 +1,14 @@
+{
+  "id": "evt_test_checkout",
+  "object": "event",
+  "type": "checkout.session.completed",
+  "data": {
+    "object": {
+      "id": "cs_test_123",
+      "object": "checkout.session",
+      "customer": "cus_test_123",
+      "client_reference_id": "%<account_id>s",
+      "metadata": { "account_id": "%<account_id>s" }
+    }
+  }
+}

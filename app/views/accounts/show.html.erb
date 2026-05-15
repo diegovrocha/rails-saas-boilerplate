@@ -1,0 +1,47 @@
+<% content_for :title, t("accounts.show.title") %>
+
+<section class="space-y-4">
+  <header class="flex items-center justify-between">
+    <h1 class="text-2xl font-semibold"><%= @account.name %></h1>
+    <% if policy(@account).edit? %>
+      <%= link_to t("accounts.show.edit"), edit_account_path(@account), class: "text-blue-600 hover:underline" %>
+    <% end %>
+  </header>
+
+  <dl class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+    <div>
+      <dt class="text-gray-500"><%= Account.human_attribute_name(:cpf) %></dt>
+      <dd><%= @account.cpf.presence || "-" %></dd>
+    </div>
+    <div>
+      <dt class="text-gray-500"><%= Account.human_attribute_name(:phone) %></dt>
+      <dd><%= @account.phone.presence || "-" %></dd>
+    </div>
+    <div>
+      <dt class="text-gray-500"><%= Account.human_attribute_name(:email) %></dt>
+      <dd><%= @account.email.presence || "-" %></dd>
+    </div>
+    <div>
+      <dt class="text-gray-500"><%= Account.human_attribute_name(:billing_type) %></dt>
+      <dd><%= t("activerecord.attributes.account/billing_types.#{@account.billing_type}") %></dd>
+    </div>
+  </dl>
+
+  <% if @account.address %>
+    <section class="mt-6">
+      <h2 class="text-lg font-medium mb-2"><%= t("accounts.address.legend") %></h2>
+      <p class="text-sm text-gray-700">
+        <%= @account.address.street %>, <%= @account.address.number %>
+        <% if @account.address.complement.present? %> - <%= @account.address.complement %><% end %>
+        <br>
+        <%= @account.address.neighborhood %> - <%= @account.address.city %>/<%= @account.address.state %>
+        <br>
+        <%= @account.address.zip %> - <%= @account.address.country %>
+      </p>
+    </section>
+  <% end %>
+
+  <% if Current.user && Current.user.accounts.where.not(id: @account.id).exists? %>
+    <%= button_to t("layout.switch_account"), switch_account_path(@account), class: "rounded-md bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 text-sm font-medium" %>
+  <% end %>
+</section>

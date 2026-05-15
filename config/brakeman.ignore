@@ -1,0 +1,40 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "9dd788e70ff5dc77daeede3930acc2e449d74b1d6e3ab8d92af9d4cd640b0e9f",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/billing/checkouts_controller.rb",
+      "line": 10,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": null,
+      "render_path": null,
+      "location": { "type": "method", "class": "Billing::CheckoutsController", "method": "create" },
+      "user_input": null,
+      "confidence": "Weak",
+      "cwe_id": [601],
+      "note": "URL is generated server-side by Stripe::Checkout::Session.create after our backend authenticates the account and price. The URL is on stripe.com (host whitelisted by Stripe). Not user-tampered."
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "a175cfc011cb632c33cfc8b3516aae478b8e600deb0ca2f260817f2a02fdd981",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/billing/portal_controller.rb",
+      "line": 5,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": null,
+      "render_path": null,
+      "location": { "type": "method", "class": "Billing::PortalController", "method": "create" },
+      "user_input": null,
+      "confidence": "Weak",
+      "cwe_id": [601],
+      "note": "URL is generated server-side by Stripe::BillingPortal::Session.create using the account's stored Stripe customer id. Not user-tampered."
+    }
+  ],
+  "updated": "2026-05-15T00:00:00Z",
+  "brakeman_version": "8.x"
+}

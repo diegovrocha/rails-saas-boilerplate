@@ -1,0 +1,29 @@
+{
+  "id": "evt_test_subdelete",
+  "object": "event",
+  "type": "customer.subscription.deleted",
+  "data": {
+    "object": {
+      "id": "sub_test_123",
+      "object": "subscription",
+      "customer": "cus_test_123",
+      "status": "canceled",
+      "current_period_end": 1893456000,
+      "cancel_at_period_end": true,
+      "trial_end": null,
+      "items": {
+        "data": [
+          {
+            "price": {
+              "id": "price_test_pro",
+              "nickname": "Pro Monthly"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "account_id": "%<account_id>s"
+      }
+    }
+  }
+}

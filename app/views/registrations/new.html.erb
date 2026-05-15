@@ -1,0 +1,44 @@
+<% content_for :title, t("auth.sign_up.title") %>
+
+<div class="mx-auto md:w-2/3 w-full">
+  <h1 class="font-bold text-3xl mb-6"><%= t("auth.sign_up.title") %></h1>
+
+  <% if @user.errors.any? %>
+    <div class="mb-4 rounded-lg bg-red-50 text-red-700 px-4 py-2 text-sm">
+      <ul class="list-disc list-inside">
+        <% @user.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with model: @user, url: registration_path, class: "space-y-4" do |form| %>
+    <div>
+      <%= form.label :name, User.human_attribute_name(:name), class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :name, required: true, autofocus: true, autocomplete: "name", class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-1 w-full" %>
+    </div>
+
+    <div>
+      <%= form.label :email_address, User.human_attribute_name(:email_address), class: "block text-sm font-medium text-gray-700" %>
+      <%= form.email_field :email_address, required: true, autocomplete: "username", class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-1 w-full" %>
+    </div>
+
+    <div>
+      <%= form.label :password, User.human_attribute_name(:password), class: "block text-sm font-medium text-gray-700" %>
+      <%= form.password_field :password, required: true, autocomplete: "new-password", maxlength: 72, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-1 w-full" %>
+    </div>
+
+    <div>
+      <%= form.label :password_confirmation, User.human_attribute_name(:password_confirmation), class: "block text-sm font-medium text-gray-700" %>
+      <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", maxlength: 72, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-1 w-full" %>
+    </div>
+
+    <%= form.submit t("auth.sign_up.submit"), class: "rounded-md px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-medium cursor-pointer" %>
+  <% end %>
+
+  <p class="text-sm text-gray-600 mt-6">
+    <%= t("auth.sign_up.already_registered") %>
+    <%= link_to t("auth.sign_up.sign_in"), new_session_path, class: "text-blue-600 hover:underline" %>
+  </p>
+</div>

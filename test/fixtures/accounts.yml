@@ -1,0 +1,14 @@
+acme:
+  name: Acme
+  active: true
+  billing_type: credit_card
+
+globex:
+  name: Globex
+  active: true
+  billing_type: free
+
+inactive:
+  name: Inactive Co
+  active: false
+  billing_type: credit_card

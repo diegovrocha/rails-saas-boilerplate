@@ -1,0 +1,172 @@
+pt-BR:
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%d/%m"
+      long: "%d de %B de %Y"
+    day_names: [domingo, segunda, terça, quarta, quinta, sexta, sábado]
+    abbr_day_names: [dom, seg, ter, qua, qui, sex, sáb]
+    month_names: [~, janeiro, fevereiro, março, abril, maio, junho, julho, agosto, setembro, outubro, novembro, dezembro]
+    abbr_month_names: [~, jan, fev, mar, abr, mai, jun, jul, ago, set, out, nov, dez]
+    order: [day, month, year]
+
+  time:
+    formats:
+      default: "%a, %d de %B de %Y, %H:%M"
+      short: "%d/%m, %H:%M"
+      long: "%A, %d de %B de %Y, %H:%M:%S %z"
+    am: "am"
+    pm: "pm"
+
+  number:
+    format:
+      separator: ","
+      delimiter: "."
+      precision: 2
+    currency:
+      format:
+        format: "%u %n"
+        unit: "R$"
+        separator: ","
+        delimiter: "."
+        precision: 2
+
+  errors:
+    messages:
+      blank: "não pode ficar em branco"
+      taken: "já está em uso"
+      invalid: "não é válido"
+      too_short: "é muito curto (mínimo %{count} caracteres)"
+      too_long: "é muito longo (máximo %{count} caracteres)"
+
+  activerecord:
+    models:
+      user: Usuário
+      account: Conta
+      account_user: Membro
+      address: Endereço
+      subscription: Assinatura
+      audit_log: Log de auditoria
+      request_log: Log de requisição
+    attributes:
+      user:
+        name: Nome
+        email_address: E-mail
+        password: Senha
+        password_confirmation: Confirmação da senha
+      account:
+        name: Nome
+        cpf: CPF
+        email: E-mail
+        phone: Telefone
+        active: Ativa
+        billing_type: Tipo de cobrança
+      account/billing_types:
+        free: Gratuito
+        credit_card: Cartão de crédito
+      account_user:
+        role: Papel
+      account_user/roles:
+        owner: Proprietário
+        admin: Administrador
+        member: Membro
+      address:
+        zip: CEP
+        street: Logradouro
+        number: Número
+        complement: Complemento
+        neighborhood: Bairro
+        city: Cidade
+        state: Estado
+        country: País
+      subscription:
+        plan: Plano
+        status: Status
+        current_period_end: Vence em
+        trial_ends_at: Trial até
+
+  app:
+    name: Boilerplate SaaS
+
+  flash:
+    login_succeeded: "Bem-vindo de volta!"
+    login_failed: "E-mail ou senha incorretos."
+    logout_succeeded: "Sessão encerrada."
+    signup_succeeded: "Conta criada com sucesso. Bem-vindo!"
+    signup_failed: "Não foi possível criar a conta. Verifique os campos."
+    account_switched: "Conta atual atualizada."
+    account_updated: "Conta atualizada com sucesso."
+    not_authorized: "Você não tem permissão para acessar esta página."
+    rate_limited: "Muitas tentativas. Tente novamente em instantes."
+    password_reset_sent: "Se o e-mail existir, enviaremos as instruções de redefinição."
+    password_reset_succeeded: "Senha redefinida com sucesso."
+    password_reset_mismatch: "As senhas não conferem."
+    password_reset_invalid: "Link de redefinição inválido ou expirado."
+    member_invited: "Membro adicionado à conta."
+    member_invite_failed: "Não foi possível adicionar o membro."
+    member_updated: "Papel do membro atualizado."
+    member_removed: "Membro removido da conta."
+    last_owner_protected: "Não é possível remover o último proprietário da conta."
+
+  layout:
+    sign_out: Sair
+    switch_account: Trocar conta
+    current_account: "Conta atual"
+    members: Membros
+
+  home:
+    welcome_guest: Bem-vindo
+    greeting: "Olá, %{name}"
+    on_account: "Conta: %{account}"
+    sign_in_link: Entrar
+    sign_up_link: Criar conta
+
+  auth:
+    sign_in:
+      title: Entrar
+      submit: Entrar
+      forgot_password: Esqueci a senha
+      no_account: Ainda não tem conta?
+      sign_up: Criar conta
+    sign_up:
+      title: Criar conta
+      submit: Criar conta
+      already_registered: Já tem conta?
+      sign_in: Entrar
+    password:
+      forgot_title: Esqueci a senha
+      forgot_submit: Enviar instruções
+      reset_title: Redefinir senha
+      reset_submit: Salvar nova senha
+      new_password: Nova senha
+      confirm_password: Confirmar senha
+
+  accounts:
+    show:
+      title: Conta
+      edit: Editar
+    edit:
+      title: Editar conta
+      submit: Salvar alterações
+    address:
+      legend: Endereço
+
+  account_users:
+    index:
+      title: Membros
+      invite_legend: Adicionar membro
+      invite_submit: Adicionar
+      role: Papel
+      actions: Ações
+      remove: Remover
+      promote: Salvar papel
+      email_label: E-mail do usuário
+      empty: Nenhum membro encontrado.
+
+  mailers:
+    passwords:
+      subject: Redefinição de senha
+      intro: "Olá %{name},"
+      body_html: "Você pode redefinir sua senha em %{link}."
+      body_text: "Você pode redefinir sua senha em: %{link}"
+      expiration: "Este link expira em %{duration}."

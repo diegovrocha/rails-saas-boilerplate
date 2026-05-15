@@ -1,0 +1,76 @@
+<% content_for :title, t("accounts.edit.title") %>
+
+<section class="space-y-4">
+  <h1 class="text-2xl font-semibold"><%= t("accounts.edit.title") %></h1>
+
+  <% if @account.errors.any? %>
+    <div class="mb-4 rounded-lg bg-red-50 text-red-700 px-4 py-2 text-sm">
+      <ul class="list-disc list-inside">
+        <% @account.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with model: @account, class: "space-y-4" do |form| %>
+    <div>
+      <%= form.label :name, Account.human_attribute_name(:name), class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :name, required: true, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-1 w-full" %>
+    </div>
+    <div>
+      <%= form.label :cpf, Account.human_attribute_name(:cpf), class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :cpf, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-1 w-full" %>
+    </div>
+    <div>
+      <%= form.label :phone, Account.human_attribute_name(:phone), class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :phone, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-1 w-full" %>
+    </div>
+    <div>
+      <%= form.label :email, Account.human_attribute_name(:email), class: "block text-sm font-medium text-gray-700" %>
+      <%= form.email_field :email, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-1 w-full" %>
+    </div>
+
+    <fieldset class="border border-gray-200 rounded-md p-4">
+      <legend class="text-sm font-medium text-gray-700 px-2"><%= t("accounts.address.legend") %></legend>
+      <%= form.fields_for :address do |addr| %>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <%= addr.label :zip, Address.human_attribute_name(:zip), class: "block text-sm text-gray-700" %>
+            <%= addr.text_field :zip, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-1 w-full" %>
+          </div>
+          <div>
+            <%= addr.label :street, Address.human_attribute_name(:street), class: "block text-sm text-gray-700" %>
+            <%= addr.text_field :street, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-1 w-full" %>
+          </div>
+          <div>
+            <%= addr.label :number, Address.human_attribute_name(:number), class: "block text-sm text-gray-700" %>
+            <%= addr.text_field :number, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-1 w-full" %>
+          </div>
+          <div>
+            <%= addr.label :complement, Address.human_attribute_name(:complement), class: "block text-sm text-gray-700" %>
+            <%= addr.text_field :complement, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-1 w-full" %>
+          </div>
+          <div>
+            <%= addr.label :neighborhood, Address.human_attribute_name(:neighborhood), class: "block text-sm text-gray-700" %>
+            <%= addr.text_field :neighborhood, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-1 w-full" %>
+          </div>
+          <div>
+            <%= addr.label :city, Address.human_attribute_name(:city), class: "block text-sm text-gray-700" %>
+            <%= addr.text_field :city, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-1 w-full" %>
+          </div>
+          <div>
+            <%= addr.label :state, Address.human_attribute_name(:state), class: "block text-sm text-gray-700" %>
+            <%= addr.text_field :state, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-1 w-full" %>
+          </div>
+          <div>
+            <%= addr.label :country, Address.human_attribute_name(:country), class: "block text-sm text-gray-700" %>
+            <%= addr.text_field :country, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-1 w-full" %>
+          </div>
+        </div>
+      <% end %>
+    </fieldset>
+
+    <%= form.submit t("accounts.edit.submit"), class: "rounded-md px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-medium cursor-pointer" %>
+  <% end %>
+</section>

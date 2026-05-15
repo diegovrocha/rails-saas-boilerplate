@@ -1,0 +1,9 @@
+acme_address:
+  account: acme
+  zip: "60175000"
+  street: Av. Beira-Mar
+  number: "1000"
+  neighborhood: Meireles
+  city: Fortaleza
+  state: CE
+  country: BR

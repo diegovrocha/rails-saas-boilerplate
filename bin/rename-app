@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Renames this boilerplate to a new application name.
+#
+# Usage:
+#   bin/rename-app NewAppName
+#
+# Provide the new name in PascalCase (e.g. SuperBilling, AcmePortal). The script:
+#   1) validates input
+#   2) replaces BoilerplateSaas / boilerplate_saas / boilerplate-saas everywhere
+#   3) bundle installs and re-prepares the database
+# It does NOT touch git; you should review and commit the diff yourself.
+
+if [[ $# -ne 1 ]]; then
+  echo "usage: bin/rename-app NewAppName" >&2
+  exit 64
+fi
+
+NEW_PASCAL="$1"
+
+if ! [[ "$NEW_PASCAL" =~ ^[A-Z][A-Za-z0-9]+$ ]]; then
+  echo "error: name must be PascalCase (got: $NEW_PASCAL)" >&2
+  exit 64
+fi
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT"
+
+if [[ ! -f config/application.rb ]] || ! grep -q "module BoilerplateSaas" config/application.rb; then
+  echo "error: doesn't look like the BoilerplateSaas template (config/application.rb missing module BoilerplateSaas)" >&2
+  exit 1
+fi
+
+# Derive snake/kebab forms.
+to_snake() {
+  echo "$1" | sed -E 's/([A-Z])/_\1/g' | sed -E 's/^_//' | tr '[:upper:]' '[:lower:]'
+}
+NEW_SNAKE="$(to_snake "$NEW_PASCAL")"
+NEW_KEBAB="${NEW_SNAKE//_/-}"
+
+echo "==> Renaming"
+echo "    BoilerplateSaas  -> $NEW_PASCAL"
+echo "    boilerplate_saas -> $NEW_SNAKE"
+echo "    boilerplate-saas -> $NEW_KEBAB"
+
+# Cross-platform sed -i.
+sed_inplace() {
+  if [[ "$(uname)" == "Darwin" ]]; then
+    sed -i '' "$@"
+  else
+    sed -i "$@"
+  fi
+}
+
+# Files to rewrite (avoid touching .git, vendored gems, sqlite, logs, builds, etc).
+mapfile -t FILES < <(
+  find . \
+    -type f \
+    \( -name "*.rb" -o -name "*.yml" -o -name "*.erb" -o -name "*.json" \
+       -o -name "*.md" -o -name "Gemfile" -o -name "Procfile.dev" -o -name "Rakefile" \
+       -o -name "Dockerfile" -o -name ".gitignore" -o -name ".ruby-version" \
+       -o -name "*.rake" -o -name "config.ru" \) \
+    ! -path "./vendor/*" \
+    ! -path "./node_modules/*" \
+    ! -path "./tmp/*" \
+    ! -path "./log/*" \
+    ! -path "./storage/*" \
+    ! -path "./.git/*" \
+    ! -path "./public/assets/*" \
+    ! -path "./app/assets/builds/*"
+)
+
+for file in "${FILES[@]}"; do
+  if grep -qE "BoilerplateSaas|boilerplate_saas|boilerplate-saas" "$file"; then
+    sed_inplace -e "s/BoilerplateSaas/${NEW_PASCAL}/g" \
+                -e "s/boilerplate_saas/${NEW_SNAKE}/g" \
+                -e "s/boilerplate-saas/${NEW_KEBAB}/g" \
+                "$file"
+    echo "    rewrote $file"
+  fi
+done
+
+echo "==> Installing gems"
+bundle install --quiet
+
+echo "==> Preparing database"
+bin/rails db:prepare
+
+cat <<EOF
+
+OK. App renamed to ${NEW_PASCAL}.
+
+Next steps:
+  - review the diff:       git diff
+  - set Stripe credentials: bin/rails credentials:edit
+  - start the dev server:  bin/dev
+  - run tests:             bin/rails test
+EOF

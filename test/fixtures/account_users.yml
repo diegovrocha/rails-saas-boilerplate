@@ -1,0 +1,14 @@
+one_owns_acme:
+  user: one
+  account: acme
+  role: owner
+
+two_member_acme:
+  user: two
+  account: acme
+  role: member
+
+two_owns_globex:
+  user: two
+  account: globex
+  role: owner

@@ -1,0 +1,5 @@
+<p><%= t("mailers.passwords.intro", name: @user.name) %></p>
+<p>
+  <%= link_to t("auth.password.reset_title"), edit_password_url(@user.password_reset_token) %>
+</p>
+<p><%= t("mailers.passwords.expiration", duration: distance_of_time_in_words(0, @user.password_reset_token_expires_in)) %></p>

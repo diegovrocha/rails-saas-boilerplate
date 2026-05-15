@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Converte um clone deste boilerplate em um novo SaaS pronto pra usar.
+#
+# Fluxo de uso:
+#
+#   git clone git@github.com:diegovrocha/rails-saas-boilerplate.git temp-folder
+#   cd temp-folder
+#   bin/spawn-saas MeuNovoSaas
+#   cd ../meu-novo-saas        # script imprime a próxima linha pra rodar
+#
+# O que o script faz, NESTA ORDEM:
+#   1) valida o nome (PascalCase)
+#   2) remove o remote `origin` (desvincula do repo do boilerplate)
+#   3) roda bin/rename-app  (substitui BoilerplateSaas/boilerplate_saas/boilerplate-saas;
+#      faz bundle install e db:prepare)
+#   4) apaga o .git e cria histórico novo com 1 commit inicial limpo
+#   5) renomeia a pasta atual para a forma kebab-case do novo nome
+#
+# Não cria repo no GitHub e não dá push. Esse passo fica com você.
+
+if [[ $# -ne 1 ]]; then
+  echo "usage: bin/spawn-saas NewAppName" >&2
+  exit 64
+fi
+
+NEW_PASCAL="$1"
+
+if ! [[ "$NEW_PASCAL" =~ ^[A-Z][A-Za-z0-9]+$ ]]; then
+  echo "error: o nome precisa estar em PascalCase (recebido: $NEW_PASCAL)" >&2
+  exit 64
+fi
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT"
+
+if [[ ! -f config/application.rb ]] || ! grep -q "module BoilerplateSaas" config/application.rb; then
+  echo "error: não parece um clone deste boilerplate (config/application.rb sem 'module BoilerplateSaas')" >&2
+  exit 1
+fi
+
+# Formas snake_case e kebab-case derivadas do PascalCase.
+to_snake() {
+  echo "$1" | sed -E 's/([A-Z])/_\1/g' | sed -E 's/^_//' | tr '[:upper:]' '[:lower:]'
+}
+NEW_SNAKE="$(to_snake "$NEW_PASCAL")"
+NEW_KEBAB="${NEW_SNAKE//_/-}"
+
+PARENT_DIR="$(dirname "$ROOT")"
+TARGET="${PARENT_DIR}/${NEW_KEBAB}"
+
+if [[ "$ROOT" != "$TARGET" && -e "$TARGET" ]]; then
+  echo "error: destino já existe: $TARGET" >&2
+  exit 1
+fi
+
+# Preserva user.email/user.name locais para reaplicar depois do reset do git.
+LOCAL_EMAIL="$(git config --local --get user.email 2>/dev/null || true)"
+LOCAL_NAME="$(git config --local --get user.name 2>/dev/null || true)"
+
+echo "==> Desvinculando do repo do boilerplate"
+git remote remove origin 2>/dev/null || true
+
+echo "==> Renomeando app -> $NEW_PASCAL"
+bin/rename-app "$NEW_PASCAL"
+
+echo "==> Limpando histórico do boilerplate"
+rm -rf .git
+git init --quiet -b main
+
+[[ -n "$LOCAL_EMAIL" ]] && git config user.email "$LOCAL_EMAIL"
+[[ -n "$LOCAL_NAME" ]]  && git config user.name  "$LOCAL_NAME"
+
+git add -A
+git commit --quiet -m "Initial commit: ${NEW_PASCAL} from boilerplate"
+
+if [[ "$ROOT" != "$TARGET" ]]; then
+  echo "==> Renomeando pasta -> $TARGET"
+  mv "$ROOT" "$TARGET"
+  FINAL_DIR="$TARGET"
+else
+  FINAL_DIR="$ROOT"
+fi
+
+cat <<EOF
+
+OK. ${NEW_PASCAL} pronto em: ${FINAL_DIR}
+
+Próximos passos:
+
+  cd ${FINAL_DIR}
+
+  # 1) Criar repo privado em https://github.com/new (name: ${NEW_KEBAB}), depois:
+  git remote add origin git@github.com:<seu-user>/${NEW_KEBAB}.git
+  git push -u origin main
+
+  # 2) Configurar credentials do Stripe:
+  bin/rails credentials:edit
+
+  # 3) Subir o servidor:
+  bin/dev
+EOF

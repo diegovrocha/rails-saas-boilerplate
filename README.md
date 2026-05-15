@@ -1,18 +1,42 @@
 # Boilerplate SaaS — Rails 8 multi-tenant
 
-Starter kit Rails 8.1 / Ruby 3.4 para SaaS multi-tenant. Após `git clone` + `bin/rename-app` + credenciais Stripe, sobe pronto com autenticação, multi-tenancy, audit log, request log, billing Stripe e Kamal pré-configurado.
+Starter kit Rails 8.1 / Ruby 3.4 para SaaS multi-tenant. Um clone + um comando e sobe pronto, com autenticação, multi-tenancy, audit log, request log, billing Stripe e Kamal pré-configurado.
 
 Este repositório **não é um SaaS pronto** — é a fundação comum sobre a qual projetos específicos são construídos.
 
 ## Como usar
 
+### Caminho rápido (recomendado)
+
 ```bash
-git clone <repo> meu-novo-saas
-cd meu-novo-saas
-bin/rename-app MeuNovoSaas
+git clone git@github.com:<seu-user>/rails-saas-boilerplate.git temp
+cd temp
+bin/spawn-saas MeuNovoSaas      # ⬅ um único comando faz todo o bootstrap
+cd ../meu-novo-saas              # script imprime essa linha pra você no final
 bin/rails credentials:edit       # configurar Stripe (ver seção Stripe)
 bin/dev                          # http://localhost:3000
 ```
+
+O `bin/spawn-saas` (em PascalCase):
+
+1. Remove o remote `origin` (desvincula do repo do boilerplate)
+2. Roda `bin/rename-app` — substitui `BoilerplateSaas` / `boilerplate_saas` / `boilerplate-saas` em todo o código, `database.yml`, `deploy.yml`, README, etc.
+3. Faz `bundle install` e `bin/rails db:prepare`
+4. Apaga o histórico do boilerplate e cria um commit inicial limpo (`Initial commit: MeuNovoSaas from boilerplate`)
+5. **Renomeia a pasta** atual para a forma kebab-case (`temp/` → `meu-novo-saas/`)
+6. Imprime os próximos passos (criar repo no GitHub, push, credentials)
+
+Não cria repo no GitHub e não dá push — esse passo fica explícito com você.
+
+### Caminho manual (só renomear, sem mexer em git/folder)
+
+Se você só quer trocar o nome do app dentro de uma instalação já existente (sem fresh-init de git, sem renomear a pasta):
+
+```bash
+bin/rename-app MeuNovoSaas
+```
+
+Útil quando você cloned o repo e quer manter o histórico, ou quando o `spawn-saas` não couber no seu fluxo.
 
 ## Stack
 

@@ -75,12 +75,22 @@ git init --quiet -b main
 git add -A
 git commit --quiet -m "Initial commit: ${NEW_PASCAL} from boilerplate"
 
-if [[ "$ROOT" != "$TARGET" ]]; then
-  echo "==> Renomeando pasta -> $TARGET"
-  mv "$ROOT" "$TARGET"
-  FINAL_DIR="$TARGET"
-else
+if [[ "$ROOT" == "$TARGET" ]]; then
+  echo "==> Pasta já chamada '${NEW_KEBAB}', mantendo"
   FINAL_DIR="$ROOT"
+else
+  echo "==> Renomeando pasta: $(basename "$ROOT") -> ${NEW_KEBAB}"
+  # Sair da pasta que vamos renomear; mv de diretório com cwd dentro dele
+  # funciona inconsistentemente entre shells/sistemas.
+  cd "$PARENT_DIR"
+  mv "$ROOT" "$TARGET"
+
+  if [[ ! -d "$TARGET" ]]; then
+    echo "error: falha ao renomear $ROOT para $TARGET" >&2
+    exit 1
+  fi
+
+  FINAL_DIR="$TARGET"
 fi
 
 cat <<EOF
